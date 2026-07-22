@@ -64,5 +64,24 @@ namespace api.Controllers
 
             return Ok(newIssue);
         }
+
+        // PUT issure resolve status to true
+        [HttpPut]
+        public async Task<ActionResult<Issue>> ResolveIssue(int id, CancellationToken token)
+        {
+            Issue? issue = await this._context.Issues.FirstOrDefaultAsync(i => i.Id == id, token);
+
+            if (issue == null)
+               return NotFound("Issue was not found");       
+
+            if (issue.Resolved)
+                return Conflict("Issue already resolved");
+
+            issue.Resolved = true;
+
+            await this._context.SaveChangesAsync(token);
+
+            return Ok(issue);
+        }
     }
 }
