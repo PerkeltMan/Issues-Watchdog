@@ -10,5 +10,6 @@ namespace api
             : base(options) { }
 
         public DbSet<Repository> Repositories { get; set; }
+        public DbSet<Issue> Issues { get; set; }
     }
 }

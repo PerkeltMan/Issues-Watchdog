@@ -13,10 +13,15 @@ namespace api.Models
         public int Id { get; set; }
 
         [Required]
-        [Column("repository_url")]
-        public string RepositoryUrl { get; set; } = string.Empty;
+        [Column("repo_owner")]
+        public string RepositoryOwner { get; set; } = string.Empty;
 
-       
+
+        [Required]
+        [Column("repo_name")]
+        public string RepositoryName { get; set; } = string.Empty;
+
+        [Required]
         [Column("added_at")]
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
     }

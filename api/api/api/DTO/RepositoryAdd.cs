@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.DTO
 {
     public class RepositoryAdd
     {
         [Required]
-        public string RepositoryUrl { get; set; } = string.Empty;
+        [Column("repo_owner")]
+        public string RepositoryOwner { get; set; } = string.Empty;
 
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Column("repo_name")]
+        public string RepositoryName { get; set; } = string.Empty;
     }
 }
