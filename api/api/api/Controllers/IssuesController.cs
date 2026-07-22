@@ -30,6 +30,14 @@ namespace api.Controllers
         public async Task<ActionResult<Issue>> AddIssue(IssueAdd issue, CancellationToken token)
         {
 
+            var repositoryExists = await _context.Repositories
+                .AnyAsync(r => r.Id == issue.RepositoryId, token);
+
+            if (!repositoryExists)
+            {
+                return NotFound("Repository was not found.");
+            }
+
             // Check for duplicate issue
             var issueExists = await _context.Issues
                 .AnyAsync(i =>
