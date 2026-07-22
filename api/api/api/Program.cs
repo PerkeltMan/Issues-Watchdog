@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 
 namespace api
 {
@@ -7,26 +8,51 @@ namespace api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Database
+            builder.Services.AddDbContext<MyContext>(options =>
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                )
+            );
 
+            // Controllers
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+
+            // Swagger
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            // CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendPolicy", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "http://127.0.0.1:4200"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
+            // Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
+            // CORS
+            app.UseCors("FrontendPolicy");
 
             app.UseAuthorization();
 
-
+            // Controllers
             app.MapControllers();
+
+            // Test endpoint
+            app.MapGet("/", () => "IssueWatchdog API is running!");
 
             app.Run();
         }
