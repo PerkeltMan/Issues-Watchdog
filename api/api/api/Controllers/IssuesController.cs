@@ -38,6 +38,20 @@ namespace api.Controllers
                 throw new Exception($"Repository '{issue.RepositoryName}' was not found.");
             }
 
+            var exists = this._context.Issues
+                 .Any(i =>
+                      i.GithubId == issue.GithubId &&
+                      this._context.Repositories.Any(r =>
+                        r.Id == i.RepositoryId &&
+                        r.RepositoryName == issue.RepositoryName
+                 )
+            );
+
+            if (exists)
+            {
+                return Conflict("Issue is already in database");
+            }
+
             Issue newIssue = new Issue
             {
                 RepositoryId = repository.Id,
@@ -60,7 +74,7 @@ namespace api.Controllers
             Issue? issue = await this._context.Issues.FirstOrDefaultAsync(i => i.Id == id, token);
 
             if (issue == null)
-               return NotFound("Issue was not found");       
+                return NotFound("Issue was not found");
 
             if (issue.Resolved)
                 return Conflict("Issue already resolved");
