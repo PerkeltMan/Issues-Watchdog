@@ -30,32 +30,20 @@ namespace api.Controllers
         public async Task<ActionResult<Issue>> AddIssue(IssueAdd issue, CancellationToken token)
         {
 
-            var repositoryExists = await _context.Repositories
-                .AnyAsync(r => r.Id == issue.RepositoryId, token);
+            var repository = this._context.Repositories
+                .SingleOrDefault(x => x.RepositoryName == issue.RepositoryName);
 
-            if (!repositoryExists)
+            if (repository == null)
             {
-                return NotFound("Repository was not found.");
-            }
-
-            // Check for duplicate issue
-            var issueExists = await _context.Issues
-                .AnyAsync(i =>
-                    i.RepositoryId == issue.RepositoryId &&
-                    i.GithubId == issue.GithubId,
-                    token);
-
-            if (issueExists)
-            {
-                return Conflict("This issue already exists.");
+                throw new Exception($"Repository '{issue.RepositoryName}' was not found.");
             }
 
             Issue newIssue = new Issue
             {
-                RepositoryId = issue.RepositoryId,
+                RepositoryId = repository.Id,
                 Severity = issue.Severity,
                 Description = issue.Description,
-                Resolved = issue.Resolved,
+                Resolved = false,
                 GithubId = issue.GithubId
             };
 
