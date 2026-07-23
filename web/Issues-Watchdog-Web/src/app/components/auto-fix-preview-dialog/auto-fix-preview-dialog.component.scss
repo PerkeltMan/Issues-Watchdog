@@ -1,0 +1,110 @@
+.auto-fix-preview-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  max-height: 80vh;
+
+  .explanation-section,
+  .changes-section {
+    h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #212121;
+    }
+  }
+
+  .explanation-section {
+    flex-shrink: 0;
+
+    .explanation-text {
+      padding: 1rem;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      line-height: 1.6;
+      color: #333;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  .changes-section {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 200px;
+
+    .changes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .change-item {
+      .file-path {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1976d2;
+        background-color: #e3f2fd;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        word-break: break-all;
+      }
+
+      .new-content {
+        margin: 0;
+        padding: 1rem;
+        background-color: #263238;
+        color: #aed581;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        font-family: 'Courier New', monospace;
+
+        code {
+          color: #aed581;
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+    flex-shrink: 0;
+
+    button {
+      min-width: 120px;
+
+      .button-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .spinner-icon {
+        animation: spin 1s linear infinite;
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+}
+
+

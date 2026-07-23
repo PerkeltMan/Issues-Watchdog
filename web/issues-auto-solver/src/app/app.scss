@@ -1,0 +1,13 @@
+﻿:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+mat-toolbar {
+  flex-shrink: 0;
+}
+main {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
