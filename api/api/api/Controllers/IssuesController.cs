@@ -58,7 +58,9 @@ namespace api.Controllers
                 Severity = issue.Severity,
                 Description = issue.Description,
                 Resolved = false,
-                GithubId = issue.GithubId
+                GithubId = issue.GithubId,
+                Title = issue.Title
+                
             };
 
             await this._context.Issues.AddAsync(newIssue, token);

@@ -30,5 +30,9 @@ namespace api.Models
         [Required]
         [Column("github_id")]
         public int GithubId { get; set; }
+
+        [Required]
+        [Column("title")]
+        public string Title { get; set; } = string.Empty;
     }
 }

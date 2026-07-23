@@ -16,5 +16,8 @@ namespace api.DTO
 
         [Required]
         public int GithubId { get; set; }
+
+        [Required]
+        public string Title {  get; set; } = string.Empty;
     }
 }
