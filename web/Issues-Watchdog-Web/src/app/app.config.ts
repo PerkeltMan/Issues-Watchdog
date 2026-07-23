@@ -1,17 +1,11 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
-import { errorInterceptor, loadingInterceptor } from './interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    // Enable Angular Material animations (required by some Material components)
-    provideAnimations(),
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([loadingInterceptor, errorInterceptor]))
+    provideRouter(routes)
   ]
 };
