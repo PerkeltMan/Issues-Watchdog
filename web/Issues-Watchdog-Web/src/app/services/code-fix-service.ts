@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Issue } from '../models/issue';
 
 export interface CodeFixRequest {
-  issueDescription: string;
+  description: string;
 }
 
 export interface CodeFixResponse {
-  FixSummary: string;
-  OldCode: string;
-  FixedCode: string;
-  FilePath: string;
+  oldCode: string;
+  newCode: string;
+  filePath: string;
+  fixDescription: string;
 }
 
 export interface CommitFixRequest {
@@ -19,16 +20,18 @@ export interface CommitFixRequest {
 }
 
 export interface CommitFixResponse {
-  
+  success: boolean;
+  commitSha: string;
+  message: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodeFixService {
-  // Replace with your active n8n Webhook Production URL
   private fixRequestWebhookUrl = 'https://issues-watchdog.onrender.com/issues/createfix';
-  private commitRequestWebhookUrl = '';
+  private commitRequestWebhookUrl = 'https://issues-watchdog.onrender.com/issues/commitfix';
+  private issuesUrl = 'https://issues-watchdog.onrender.com/issues';
   constructor(private http: HttpClient) {}
 
   requestFix(payload: CodeFixRequest): Observable<CodeFixResponse> {
@@ -37,5 +40,9 @@ export class CodeFixService {
 
   commitFix(payload: CommitFixRequest): Observable<CommitFixResponse> {
     return this.http.post<CommitFixResponse>(this.commitRequestWebhookUrl, payload);
+  }
+
+  markIssueAsResolved(issueId: number): Observable<Issue> {
+    return this.http.put<Issue>(this.issuesUrl, issueId);
   }
 }

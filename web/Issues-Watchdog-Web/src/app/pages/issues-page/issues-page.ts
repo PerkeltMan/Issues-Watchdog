@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { Issue } from '../../models/issue';
 import { IssuesService } from '../../services/issues-service';
 import { CommonModule } from '@angular/common';
@@ -15,10 +15,12 @@ export class IssuesPage implements OnInit {
   issues: Issue[] = [];
 
   private issuesService = inject(IssuesService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.issuesService.getIssues().subscribe((issues) => {
       this.issues = issues;
+      this.cdr.detectChanges();
     });
   }
 }

@@ -22,14 +22,14 @@
 
   <div class="card-footer">
 
-    @if (!fixResponse) {
+    @if (!fixResponse()) {
 
       <button
         class="fix-button"
         (click)="generateFix()"
-        [disabled]="loading">
+        [disabled]="loading()">
 
-        {{ loading ? 'Generating...' : 'AI Fix' }}
+        {{ loading() ? 'Generating...' : 'AI Fix' }}
 
       </button>
 
@@ -37,14 +37,14 @@
 
   </div>
 
-  @if (fixResponse) {
+  @if (fixResponse(); as fix) {
 
     <div class="fix-result">
 
       <h4>Summary</h4>
 
       <p class="summary">
-        {{ fixResponse.FixSummary }}
+        {{ fix.fixDescription }}
       </p>
 
       <div class="code-columns">
@@ -53,7 +53,7 @@
 
           <h4>Original Code</h4>
 
-          <pre>{{ fixResponse.OldCode }}</pre>
+          <pre>{{ fix.oldCode }}</pre>
 
         </div>
 
@@ -61,7 +61,7 @@
 
           <h4>Fixed Code</h4>
 
-          <pre>{{ fixResponse.FixedCode }}</pre>
+          <pre>{{ fix.newCode }}</pre>
 
         </div>
 
@@ -71,13 +71,49 @@
 
         <button
           class="apply-button"
-          (click)="applyFix()">
+          (click)="applyFix()"
+          [disabled]="commitLoading()">
 
-          Apply
+          {{ commitLoading() ? 'Applying...' : 'Apply Fix' }}
 
         </button>
 
       </div>
+
+      @if (commitFixResponse(); as commitResult) {
+
+        <div
+          class="commit-result"
+          [class.success]="commitResult.success"
+          [class.failure]="!commitResult.success">
+
+          <h4>
+            {{ commitResult.success ? 'Commit Successful' : 'Commit Failed' }}
+          </h4>
+
+          <p class="message">
+            {{ commitResult.message }}
+          </p>
+
+          @if (commitResult.success) {
+
+            <div class="sha">
+
+        <span class="label">
+          Commit SHA
+        </span>
+
+              <code>
+                {{ commitResult.commitSha }}
+              </code>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
 
     </div>
 
