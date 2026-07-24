@@ -1,4 +1,5 @@
-﻿using api.DTO;
+﻿using System.Runtime.InteropServices;
+using api.DTO;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,12 @@ namespace api.Controllers
     public class IssuesController : ControllerBase
     {
         private readonly MyContext _context;
+        private readonly HttpClient httpClient;
 
-        public IssuesController(MyContext context)
+        public IssuesController(MyContext context, HttpClient client)
         {
             this._context = context;
+            this.httpClient = client;
         }
 
         [HttpGet]
@@ -60,7 +63,7 @@ namespace api.Controllers
                 Resolved = false,
                 GithubId = issue.GithubId,
                 Title = issue.Title
-                
+
             };
 
             await this._context.Issues.AddAsync(newIssue, token);
@@ -87,5 +90,98 @@ namespace api.Controllers
 
             return Ok(issue);
         }
+
+
+        [HttpPost("createFix")]
+        public async Task<ActionResult<FixedCode>> GenerateIssueFix(
+    [FromBody] CreateFixRequest request,
+    CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(request.Description))
+            {
+                return BadRequest("Description is required.");
+            }
+
+            var n8nPayload = new
+            {
+                issueDescription = request.Description
+            };
+
+            var response = await httpClient.PostAsJsonAsync(
+                "https://karelmay.app.n8n.cloud/webhook/issue-watchdog",
+                n8nPayload,
+                cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
+
+                return StatusCode(
+                    (int)response.StatusCode,
+                    $"n8n workflow failed: {error}");
+            }
+
+            var fixedCode = await response.Content.ReadFromJsonAsync<FixedCode>(
+                cancellationToken: cancellationToken);
+
+            if (fixedCode is null)
+            {
+                return StatusCode(
+                    StatusCodes.Status502BadGateway,
+                    "n8n returned an empty or invalid response.");
+            }
+
+            return Ok(fixedCode);
+        }
+
+
+        [HttpPost("commitFix")]
+        public async Task<ActionResult<CommitFixResponse>> CommitFix(
+    [FromBody] CommitFixRequest commit,
+    CancellationToken token)
+        {
+            if (string.IsNullOrWhiteSpace(commit.FilePath))
+            {
+                return BadRequest("FilePath is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(commit.FixedCode))
+            {
+                return BadRequest("FixedCode is required.");
+            }
+
+            var n8nPayload = new
+            {
+                filePath = commit.FilePath,
+                fixedCode = commit.FixedCode
+            };
+
+            var response = await this.httpClient.PostAsJsonAsync(
+                "http://YOUR-N8N-SERVER/webhook/commit-fix",
+                n8nPayload,
+                token);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync(token);
+
+                return StatusCode(
+                    (int)response.StatusCode,
+                    $"n8n commit workflow failed: {error}");
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<CommitFixResponse>(
+                cancellationToken: token);
+
+            if (result is null)
+            {
+                return StatusCode(
+                    StatusCodes.Status502BadGateway,
+                    "n8n returned an empty or invalid response.");
+            }
+
+            return Ok(result);
+        }
+
     }
 }

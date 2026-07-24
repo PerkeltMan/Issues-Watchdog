@@ -39,6 +39,8 @@ namespace api
 
             var app = builder.Build();
 
+            builder.Services.AddHttpClient();
+
             // Swagger
             app.UseSwagger();
             app.UseSwaggerUI();
