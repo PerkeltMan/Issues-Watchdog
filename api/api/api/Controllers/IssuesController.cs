@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using api.DTO;
+﻿using api.DTO;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace api.Controllers
     public class IssuesController : ControllerBase
     {
         private readonly MyContext _context;
-        private readonly HttpClient httpClient;
+        private HttpClient httpClient;
 
         public IssuesController(MyContext context, HttpClient client)
         {

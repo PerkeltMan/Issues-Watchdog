@@ -22,6 +22,8 @@ namespace api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddHttpClient();
+
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -39,7 +41,6 @@ namespace api
 
             var app = builder.Build();
 
-            builder.Services.AddHttpClient();
 
             // Swagger
             app.UseSwagger();
