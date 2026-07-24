@@ -19,7 +19,7 @@ export interface CommitFixRequest {
 }
 
 export interface CommitFixResponse {
-
+  
 }
 
 @Injectable({
@@ -27,7 +27,7 @@ export interface CommitFixResponse {
 })
 export class CodeFixService {
   // Replace with your active n8n Webhook Production URL
-  private fixRequestWebhookUrl = 'https://karelmay.app.n8n.cloud/webhook/issue-watchdog';
+  private fixRequestWebhookUrl = 'https://issues-watchdog.onrender.com/issues/createfix';
   private commitRequestWebhookUrl = '';
   constructor(private http: HttpClient) {}
 

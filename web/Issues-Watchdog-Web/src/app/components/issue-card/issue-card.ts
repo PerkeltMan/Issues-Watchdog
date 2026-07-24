@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Issue } from '../../models/issue';
-import { CodeFixRequest, CodeFixResponse, CodeFixService, CommitFixRequest } from '../../services/code-fix-service';
+import { CodeFixRequest, CodeFixResponse, CodeFixService, CommitFixRequest, CommitFixResponse } from '../../services/code-fix-service';
 
 @Component({
   selector: 'app-issue-card',
@@ -20,6 +20,7 @@ export class IssueCard {
   loading = false;
 
   fixResponse?: CodeFixResponse;
+  commitFixResponse?: CommitFixResponse;
 
   generateFix(): void {
     if (this.loading) {
@@ -34,8 +35,7 @@ export class IssueCard {
 
     this.codeFixService.requestFix(request).subscribe({
       next: (response) => {
-        this.fixResponse = response;
-        this.loading = false;
+        this.commitFixResponse = response;
       },
 
       error: () => {
@@ -45,18 +45,18 @@ export class IssueCard {
   }
 
   applyFix(): void {
-/*
-    const request: CommitFixRequest = {
-      fixedCode: this.fixResponse?.FilePath,
-    }
 
-    this.codeFixService.commitFix(request).subscribe({
-      next: (response) => {
-        this.fixResponse = response;
-        this.loading = false;
-      }
-    }
-    */
+    const request: CommitFixRequest = {
+      fixedCode: this.fixResponse?.FixedCode ?? "",
+      filePath: this.fixResponse?.FilePath ?? ""
+    };
+
+        this.codeFixService.commitFix(request).subscribe({
+          next: (response) => {
+            this.fixResponse = response;
+            this.loading = false;
+          }
+        }
   }
 
 }
