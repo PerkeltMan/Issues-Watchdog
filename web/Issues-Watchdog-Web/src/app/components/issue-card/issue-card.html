@@ -1,0 +1,86 @@
+<div class="card">
+
+  <div class="card-header">
+
+    <h3 class="title">
+      {{ issue.title }}
+    </h3>
+
+    <span
+      class="severity"
+      [ngClass]="issue.severity.toLowerCase()">
+
+      {{ issue.severity | titlecase }}
+
+    </span>
+
+  </div>
+
+  <p class="description">
+    {{ issue.description }}
+  </p>
+
+  <div class="card-footer">
+
+    @if (!fixResponse) {
+
+      <button
+        class="fix-button"
+        (click)="generateFix()"
+        [disabled]="loading">
+
+        {{ loading ? 'Generating...' : 'AI Fix' }}
+
+      </button>
+
+    }
+
+  </div>
+
+  @if (fixResponse) {
+
+    <div class="fix-result">
+
+      <h4>Summary</h4>
+
+      <p class="summary">
+        {{ fixResponse.FixSummary }}
+      </p>
+
+      <div class="code-columns">
+
+        <div class="code-box">
+
+          <h4>Original Code</h4>
+
+          <pre>{{ fixResponse.OldCode }}</pre>
+
+        </div>
+
+        <div class="code-box">
+
+          <h4>Fixed Code</h4>
+
+          <pre>{{ fixResponse.FixedCode }}</pre>
+
+        </div>
+
+      </div>
+
+      <div class="apply-container">
+
+        <button
+          class="apply-button"
+          (click)="applyFix()">
+
+          Apply
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,24 @@
+<div class="page">
+
+  <img
+    src="logo.png"
+    alt="Logo"
+    class="logo">
+
+  <div class="issues-container">
+
+    <div class="issues-header">
+      <h2>Issues</h2>
+    </div>
+
+    <div class="issues">
+
+      @for (issue of issues; track issue.id) {
+        <app-issue-card [issue]="issue"></app-issue-card>
+      }
+
+    </div>
+
+  </div>
+
+</div>
