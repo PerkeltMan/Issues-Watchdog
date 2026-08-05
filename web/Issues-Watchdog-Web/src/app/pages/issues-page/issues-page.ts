@@ -22,5 +22,13 @@ export class IssuesPage implements OnInit {
       this.issues = issues;
       this.cdr.detectChanges();
     });
+
+    /*
+    // hardcoded issues for testing purposes
+    const issue1: Issue = { id: 67, description: 'this bug breaks the whole application, it lies in the Main() function', githubId: 37, repositoryId: 8, resolved: false, severity: 'high', title: 'terrible bug' };
+    const issue2: Issue = { id: 68, description: "nothing groundbreaking - a button doesn't register user's click sometimes", githubId: 37, repositoryId: 8, resolved: false, severity: 'low', title: 'minor bug' };
+    this.issues.push(issue1);
+    this.issues.push(issue2);
+     */
   }
 }

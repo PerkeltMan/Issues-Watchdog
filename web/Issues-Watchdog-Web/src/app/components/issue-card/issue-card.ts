@@ -35,6 +35,24 @@ export class IssueCard {
 
     this.loading.set(true);
 
+    /*
+    // hardcoded code fix response for testing purposes
+    const fixResponse: CodeFixResponse = {
+      oldCode:
+        '#include "hello.h"\n\nint main()\n{\n    std::cout << "welcome, misters" << std::endl;\n\n',
+      newCode:
+        '#include "hello.h"\n\nint main()\n{\n    std::cout << "welcome, misters" << std::endl;\n}\n',
+      filePath: 'src/main.cpp',
+      fixDescription: 'closing bracket of the main function was missing',
+    };
+
+    setTimeout(() => {
+      this.fixResponse.set(fixResponse);
+      this.loading.set(false);
+    }, 5000);
+    return;
+    */
+
     const request: CodeFixRequest = {
       description: this.issue.description,
     };
@@ -58,6 +76,21 @@ export class IssueCard {
 
     this.commitLoading.set(true);
 
+    /*
+    // hardcoded commit fix response for testing purposes
+    const commitFixResponse: CommitFixResponse = {
+      success: true,
+      commitSha: '8890ec1676190716839f8fa5025149806814c97acf5ab8db264b1302564a4038',
+      message: 'yo yo the fix was successfully committed and pushed',
+    };
+
+    setTimeout(() => {
+      this.commitFixResponse.set(commitFixResponse);
+      this.commitLoading.set(false);
+    }, 500);
+    return;
+    */
+
     const request: CommitFixRequest = {
       fixedCode: this.fixResponse()?.newCode ?? '',
       filePath: this.fixResponse()?.filePath ?? '',
@@ -68,8 +101,7 @@ export class IssueCard {
         this.commitFixResponse.set(response);
         this.commitLoading.set(false);
 
-        if (this.commitFixResponse()?.success)
-        {
+        if (this.commitFixResponse()?.success) {
           this.codeFixService.markIssueAsResolved(this.issue.id).subscribe();
         }
       },
